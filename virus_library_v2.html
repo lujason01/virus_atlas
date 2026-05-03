@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virus Atlas — Structural Virology Reference · Jason Lubega</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #080e0a;
+    --bg2:       #0d1610;
+    --bg3:       #111e14;
+    --bg4:       #162019;
+    --panel:     #0f1a12;
+    --border:    #1e3323;
+    --border2:   #2a4632;
+    --green0:    #0d3320;
+    --green1:    #1a5c38;
+    --green2:    #2e8b56;
+    --green3:    #4dbe7a;
+    --green4:    #80e09a;
+    --green5:    #b4f0c4;
+    --accent:    #39ff7e;
+    --accent2:   #00e5a0;
+    --text:      #c8e8d0;
+    --text2:     #89b898;
+    --text3:     #4a7560;
+    --mono:      'Space Mono', monospace;
+    --sans:      'Syne', sans-serif;
+    --glow:      0 0 24px rgba(57,255,126,0.12);
+    --glow2:     0 0 48px rgba(57,255,126,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(8,14,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    height: 58px;
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 0;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-right: 32px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .nav-logo span { color: var(--text3); }
+
+  .nav-viruses {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-viruses::-webkit-scrollbar { display: none; }
+
+  .nav-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    background: none;
+    border: none;
+    padding: 6px 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--green4); background: var(--bg3); }
+  .nav-btn.active { color: var(--accent); background: var(--green0); }
+
+  /* ── PAGES ── */
+  .page { display: none; padding-top: 58px; min-height: 100vh; }
+  .page.active { display: flex; flex-direction: column; }
+
+  /* ── HERO ── */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 0;
+    min-height: calc(100vh - 58px);
+    position: relative;
+  }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-visual { height: 340px; order: -1; }
+  }
+
+  .hero-content {
+    padding: 56px 56px 56px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .virus-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .virus-tag::before {
+    content: '';
+    display: block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent2);
+    box-shadow: 0 0 8px var(--accent2);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .virus-name {
+    font-family: var(--sans);
+    font-size: clamp(42px, 6vw, 76px);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .virus-name em {
+    display: block;
+    font-style: normal;
+    color: var(--accent);
+    font-size: 0.55em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .virus-subtitle {
+    font-size: 14px;
+    color: var(--text2);
+    font-family: var(--mono);
+    margin-bottom: 36px;
+    letter-spacing: 0.04em;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .meta-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    transition: border-color 0.2s;
+  }
+  .meta-card:hover { border-color: var(--border2); }
+
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .meta-value {
+    font-size: 13px;
+    color: var(--green4);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .section-divider {
+    width: 40px;
+    height: 2px;
+    background: var(--green2);
+    margin-bottom: 28px;
+  }
+
+  .info-block {
+    margin-bottom: 36px;
+  }
+
+  .info-heading {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .info-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .info-text {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text2);
+  }
+
+  .info-text strong { color: var(--green4); font-weight: 600; }
+
+  .serotype-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .serotype-pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    color: var(--green4);
+    background: var(--bg3);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── 3D VISUAL ── */
+  .hero-visual {
+    position: relative;
+    background: var(--bg2);
+    border-left: 1px solid var(--border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .canvas-wrap {
+    flex: 1;
+    position: relative;
+  }
+
+  .canvas-wrap canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .canvas-label {
+    position: absolute;
+    bottom: 16px;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  .canvas-controls {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ctrl-btn {
+    width: 32px; height: 32px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text3);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .ctrl-btn:hover { color: var(--accent); border-color: var(--border2); }
+
+  /* ── GENOME SECTION ── */
+  .genome-section {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 56px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .section-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--accent2);
+    border: 1px solid var(--border2);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .genome-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    overflow-x: auto;
+  }
+
+  .genome-wrap svg {
+    display: block;
+    min-width: 700px;
+  }
+
+  /* ── DISCOVERY SECTION ── */
+  .discovery-section {
+    padding: 56px;
+    border-top: 1px solid var(--border);
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--green2), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 32px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -36px; top: 6px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green2);
+    box-shadow: 0 0 8px var(--green2);
+  }
+
+  .timeline-year {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .timeline-text {
+    font-size: 15px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 28px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+  }
+
+  footer a { color: var(--green3); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  /* ── HOME PAGE ── */
+  .home-hero {
+    min-height: calc(100vh - 58px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .home-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 40%, rgba(46,139,86,0.08) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(30,51,35,0.4) 39px, rgba(30,51,35,0.4) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(30,51,35,0.4) 39px, rgba(30,51,35,0.4) 40px);
+    pointer-events: none;
+  }
+
+  .home-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .home-title {
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: #fff;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .home-title span { color: var(--accent); }
+
+  .home-desc {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text2);
+    max-width: 560px;
+    margin-bottom: 56px;
+    position: relative;
+  }
+
+  .virus-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 860px;
+    width: 100%;
+    position: relative;
+  }
+
+  @media (max-width: 700px) {
+    .virus-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .virus-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .virus-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .virus-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-2px);
+    box-shadow: var(--glow);
+  }
+
+  .virus-card:hover::before { opacity: 1; }
+
+  .card-abbr {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--accent2);
+    margin-bottom: 8px;
+  }
+
+  .card-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+
+  .card-type {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: var(--mono);
+    margin-bottom: 16px;
+    letter-spacing: 0.04em;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .card-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: var(--bg3);
+    color: var(--text3);
+    border: 1px solid var(--border);
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--green2); }
+
+  /* scan line animation */
+  @keyframes scanline {
+    0% { top: -100%; }
+    100% { top: 200%; }
+  }
+
+  .scan-overlay {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .scan-overlay::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, rgba(57,255,126,0.03), transparent);
+    animation: scanline 8s linear infinite;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">VIRUS<span>//</span>ATLAS</div>
+  <div class="nav-viruses">
+    <button class="nav-btn active" onclick="showPage('home')">Index</button>
+    <button class="nav-btn" onclick="showPage('adeno')">Adenovirus</button>
+    <button class="nav-btn" onclick="showPage('aav')">AAV</button>
+    <button class="nav-btn" onclick="showPage('hpv')">HPV</button>
+    <button class="nav-btn" onclick="showPage('vsv')">VSV</button>
+    <button class="nav-btn" onclick="showPage('sfv')">SFV</button>
+    <button class="nav-btn" onclick="showPage('vaccinia')">Vaccinia</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="home" class="page active">
+  <div class="home-hero">
+    <div class="home-bg"></div>
+    <div class="home-eyebrow">Structural Virology Reference</div>
+    <h1 class="home-title">Virus<br><span>Atlas</span></h1>
+    <p class="home-desc">Interactive 3D structural profiles of six foundational viruses — from icosahedral capsids to complex enveloped particles. Genome maps, classification, and discovery timelines.</p>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:48px;position:relative;opacity:0.7;">
+      <div style="width:20px;height:1px;background:var(--green2);"></div>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:0.12em;">Jason Lubega — PhD · Oncolytic Virotherapy</span>
+      <div style="width:20px;height:1px;background:var(--green2);"></div>
+    </div>
+    <div class="virus-grid">
+      <div class="virus-card" onclick="showPage('adeno')">
+        <div class="card-abbr">ADENO</div>
+        <div class="card-name">Adeno-<br>virus</div>
+        <div class="card-type">dsDNA · Non-enveloped</div>
+        <div class="card-tags">
+          <span class="card-tag">Icosahedral</span>
+          <span class="card-tag">~90nm</span>
+          <span class="card-tag">57 serotypes</span>
+        </div>
+      </div>
+      <div class="virus-card" onclick="showPage('aav')">
+        <div class="card-abbr">AAV</div>
+        <div class="card-name">Adeno-<br>Associated</div>
+        <div class="card-type">ssDNA · Non-enveloped</div>
+        <div class="card-tags">
+          <span class="card-tag">Icosahedral</span>
+          <span class="card-tag">~26nm</span>
+          <span class="card-tag">13 serotypes</span>
+        </div>
+      </div>
+      <div class="virus-card" onclick="showPage('hpv')">
+        <div class="card-abbr">HPV</div>
+        <div class="card-name">Human<br>Papilloma</div>
+        <div class="card-type">dsDNA · Non-enveloped</div>
+        <div class="card-tags">
+          <span class="card-tag">Icosahedral</span>
+          <span class="card-tag">~55nm</span>
+          <span class="card-tag">200+ types</span>
+        </div>
+      </div>
+      <div class="virus-card" onclick="showPage('vsv')">
+        <div class="card-abbr">VSV</div>
+        <div class="card-name">Vesicular<br>Stomatitis</div>
+        <div class="card-type">ssRNA(−) · Enveloped</div>
+        <div class="card-tags">
+          <span class="card-tag">Bullet-shaped</span>
+          <span class="card-tag">~180nm</span>
+          <span class="card-tag">Rhabdovirus</span>
+        </div>
+      </div>
+      <div class="virus-card" onclick="showPage('sfv')">
+        <div class="card-abbr">SFV</div>
+        <div class="card-name">Semliki<br>Forest</div>
+        <div class="card-type">ssRNA(+) · Enveloped</div>
+        <div class="card-tags">
+          <span class="card-tag">Spherical</span>
+          <span class="card-tag">~70nm</span>
+          <span class="card-tag">Alphavirus</span>
+        </div>
+      </div>
+      <div class="virus-card" onclick="showPage('vaccinia')">
+        <div class="card-abbr">VACV</div>
+        <div class="card-name">Vaccinia<br>Virus</div>
+        <div class="card-type">dsDNA · Enveloped</div>
+        <div class="card-tags">
+          <span class="card-tag">Brick-shaped</span>
+          <span class="card-tag">~360nm</span>
+          <span class="card-tag">Poxvirus</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer style="flex-direction:column;gap:14px;align-items:flex-start;padding:32px 56px;">
+    <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+      <span>VIRUS//ATLAS v1.0 — Structural Virology Reference</span>
+      <span>Six foundational viruses · Interactive 3D profiles</span>
+    </div>
+    <div style="width:100%;height:1px;background:var(--border);opacity:0.5;"></div>
+    <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;">
+      <span style="color:var(--green3);letter-spacing:0.1em;">Jason Lubega</span>
+      <span style="color:var(--text3);font-size:10px;letter-spacing:0.06em;">PhD Candidate · Applied Medicine &amp; Biomedicine</span>
+      <span style="color:var(--border2);font-size:10px;">·</span>
+      <span style="color:var(--text3);font-size:10px;letter-spacing:0.06em;">Oncolytic Virotherapy for Pancreatic Cancer</span>
+      <span style="color:var(--border2);font-size:10px;">·</span>
+      <span style="color:var(--text3);font-size:10px;letter-spacing:0.06em;font-style:italic;">Curated as a structural reference for oncolytic vector selection and comparative virology</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ADENOVIRUS -->
+<div id="adeno" class="page">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="virus-tag">Adenoviridae · dsDNA</div>
+      <h1 class="virus-name">Adeno-<br>virus<em>Human Mastadenovirus</em></h1>
+      <p class="virus-subtitle">// Non-enveloped · Icosahedral · ~90nm diameter</p>
+      <div class="meta-grid">
+        <div class="meta-card"><div class="meta-label">Family</div><div class="meta-value">Adenoviridae</div></div>
+        <div class="meta-card"><div class="meta-label">Genome</div><div class="meta-value">dsDNA · 26–45 kbp</div></div>
+        <div class="meta-card"><div class="meta-label">Capsid</div><div class="meta-value">T=25 Icosahedron</div></div>
+        <div class="meta-card"><div class="meta-label">Diameter</div><div class="meta-value">~90 nm</div></div>
+        <div class="meta-card"><div class="meta-label">Host</div><div class="meta-value">Vertebrates</div></div>
+        <div class="meta-card"><div class="meta-label">Discovered</div><div class="meta-value">1953</div></div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Classification & Serotypes</div>
+        <p class="info-text">Adenoviruses are classified into seven species (A–G) comprising <strong>57 human serotypes</strong>. They are further divided by hemagglutination properties and receptor usage (CAR, CD46, or desmoglein-2).</p>
+        <div class="serotype-list">
+          <span class="serotype-pill">Species A (12,18,31)</span>
+          <span class="serotype-pill">Species B (3,7,11,14,16,21,34,35,50)</span>
+          <span class="serotype-pill">Species C (1,2,5,6)</span>
+          <span class="serotype-pill">Species D (8,9,10…)</span>
+          <span class="serotype-pill">Species E (4)</span>
+          <span class="serotype-pill">Species F (40,41)</span>
+          <span class="serotype-pill">Species G (52)</span>
+        </div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Structural Features</div>
+        <p class="info-text">The icosahedral capsid is formed by <strong>240 trimeric hexon</strong> proteins and <strong>12 pentameric penton bases</strong> at each vertex, from which fibre proteins project outward. The fiber knob mediates receptor attachment. A core of <strong>dsDNA</strong> (~36 kb) is condensed by histone-like proteins VII and V.</p>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="scan-overlay"></div>
+      <div class="canvas-wrap">
+        <canvas id="canvas-adeno"></canvas>
+        <div class="canvas-label">Drag to rotate · Scroll to zoom</div>
+        <div class="canvas-controls">
+          <button class="ctrl-btn" onclick="toggleRotation('adeno')" title="Toggle auto-rotation">⟳</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="genome-section">
+    <div class="section-header">
+      <h2 class="section-title">Genome Map</h2>
+      <span class="section-badge">dsDNA · ~36 kbp</span>
+    </div>
+    <div class="genome-wrap">
+      <svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <!-- Adenovirus genome SVG -->
+        <defs>
+          <linearGradient id="ag-bg" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#0d3320"/>
+            <stop offset="100%" stop-color="#111e14"/>
+          </linearGradient>
+        </defs>
+        <rect width="900" height="280" fill="url(#ag-bg)" rx="8"/>
+
+        <!-- Title -->
+        <text x="30" y="32" font-family="'Space Mono',monospace" font-size="11" fill="#4dbe7a" letter-spacing="2">ADENOVIRUS GENOME (~36 kbp)</text>
+        <text x="30" y="50" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Linear dsDNA · ITRs at both termini</text>
+
+        <!-- Backbone -->
+        <rect x="30" y="100" width="840" height="14" rx="4" fill="#0d1610" stroke="#1e3323" stroke-width="1"/>
+
+        <!-- ITR left -->
+        <rect x="30" y="90" width="36" height="34" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="48" y="111" font-family="'Space Mono',monospace" font-size="8" fill="#80e09a" text-anchor="middle">ITR</text>
+
+        <!-- ITR right -->
+        <rect x="834" y="90" width="36" height="34" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="852" y="111" font-family="'Space Mono',monospace" font-size="8" fill="#80e09a" text-anchor="middle">ITR</text>
+
+        <!-- Gene blocks - Early genes top strand -->
+        <!-- E1A -->
+        <rect x="66" y="72" width="70" height="24" rx="3" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="101" y="88" font-family="'Space Mono',monospace" font-size="9" fill="#5cc8f0" text-anchor="middle">E1A</text>
+        <!-- E1B -->
+        <rect x="140" y="72" width="88" height="24" rx="3" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="184" y="88" font-family="'Space Mono',monospace" font-size="9" fill="#5cc8f0" text-anchor="middle">E1B</text>
+        <!-- E3 -->
+        <rect x="490" y="72" width="110" height="24" rx="3" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="545" y="88" font-family="'Space Mono',monospace" font-size="9" fill="#5cc8f0" text-anchor="middle">E3</text>
+
+        <!-- Late genes (bottom) -->
+        <!-- MLP → L1-L5 -->
+        <rect x="280" y="118" width="20" height="24" rx="2" fill="#3b6d11" stroke="#63a021" stroke-width="1"/>
+        <text x="290" y="134" font-family="'Space Mono',monospace" font-size="7" fill="#97c459" text-anchor="middle">MLP</text>
+
+        <!-- L1 -->
+        <rect x="304" y="118" width="60" height="24" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="334" y="134" font-family="'Space Mono',monospace" font-size="9" fill="#80e09a" text-anchor="middle">L1</text>
+        <!-- L2 -->
+        <rect x="368" y="118" width="54" height="24" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="395" y="134" font-family="'Space Mono',monospace" font-size="9" fill="#80e09a" text-anchor="middle">L2</text>
+        <!-- L3 -->
+        <rect x="426" y="118" width="60" height="24" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="456" y="134" font-family="'Space Mono',monospace" font-size="9" fill="#80e09a" text-anchor="middle">L3</text>
+        <!-- L4 -->
+        <rect x="604" y="118" width="60" height="24" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="634" y="134" font-family="'Space Mono',monospace" font-size="9" fill="#80e09a" text-anchor="middle">L4</text>
+        <!-- L5 -->
+        <rect x="668" y="118" width="70" height="24" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="703" y="134" font-family="'Space Mono',monospace" font-size="9" fill="#80e09a" text-anchor="middle">L5</text>
+
+        <!-- E2 -->
+        <rect x="232" y="72" width="50" height="24" rx="3" fill="#4a1b6a" stroke="#8b3ab0" stroke-width="1"/>
+        <text x="257" y="88" font-family="'Space Mono',monospace" font-size="9" fill="#c87af0" text-anchor="middle">E2</text>
+
+        <!-- E4 -->
+        <rect x="742" y="72" width="90" height="24" rx="3" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="787" y="88" font-family="'Space Mono',monospace" font-size="9" fill="#5cc8f0" text-anchor="middle">E4</text>
+
+        <!-- VA RNAs -->
+        <rect x="290" y="118" width="0" height="0"/>
+        <rect x="234" y="118" width="44" height="18" rx="2" fill="#4a3510" stroke="#8b6a1a" stroke-width="1"/>
+        <text x="256" y="131" font-family="'Space Mono',monospace" font-size="8" fill="#c8a04a" text-anchor="middle">VA RNAs</text>
+
+        <!-- Scale bar -->
+        <line x1="30" y1="165" x2="870" y2="165" stroke="#1e3323" stroke-width="0.5"/>
+        <text x="30" y="178" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560">0 kbp</text>
+        <text x="450" y="178" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="middle">~18 kbp</text>
+        <text x="870" y="178" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="end">~36 kbp</text>
+
+        <!-- Legend -->
+        <rect x="30" y="200" width="10" height="10" rx="2" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="46" y="210" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Early genes</text>
+        <rect x="150" y="200" width="10" height="10" rx="2" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="166" y="210" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Late genes</text>
+        <rect x="270" y="200" width="10" height="10" rx="2" fill="#4a1b6a" stroke="#8b3ab0" stroke-width="1"/>
+        <text x="286" y="210" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Replication</text>
+        <rect x="390" y="200" width="10" height="10" rx="2" fill="#4a3510" stroke="#8b6a1a" stroke-width="1"/>
+        <text x="406" y="210" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Non-coding RNA</text>
+        <rect x="540" y="200" width="10" height="10" rx="2" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="556" y="210" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Inverted Terminal Repeat</text>
+
+        <!-- Protein annotations -->
+        <text x="334" y="155" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="middle">Penton/IIIa</text>
+        <text x="395" y="155" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="middle">Penton</text>
+        <text x="456" y="155" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="middle">Hexon/Protease</text>
+        <text x="634" y="155" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="middle">100K/22K</text>
+        <text x="703" y="155" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="middle">Fiber</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="discovery-section">
+    <div class="section-header">
+      <h2 class="section-title">Discovery & History</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">1953</div>
+        <div class="timeline-text">Wallace Rowe, Robert Huebner and colleagues at the NIH isolated adenoviruses from adenoid tissue cultures undergoing spontaneous cytopathic effect. Initially called "adenoid degeneration (AD) agent."</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1954–1956</div>
+        <div class="timeline-text">Multiple independent groups, including Hilleman and Werner, isolated similar agents from military recruits with acute respiratory disease. The family <em>Adenoviridae</em> was formally established, unifying these isolates.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1962</div>
+        <div class="timeline-text">Trentin, Yabe and Taylor demonstrated that human adenovirus 12 (HAdV-12) induced tumors in newborn hamsters — the first demonstration of oncogenic potential in a human virus, opening an entire field of tumor virology.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1979–present</div>
+        <div class="timeline-text">Adenovirus vectors become a cornerstone of gene therapy and vaccine delivery. The COVID-19 pandemic saw their large-scale deployment in the Oxford-AstraZeneca and Johnson & Johnson vaccines (ChAdOx1, Ad26).</div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>ADENOVIRUS · Adenoviridae · dsDNA</span>
+    <span><a href="#" onclick="showPage('home')">← Index</a></span>
+  </footer>
+</div>
+
+<!-- AAV -->
+<div id="aav" class="page">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="virus-tag">Parvoviridae · ssDNA</div>
+      <h1 class="virus-name">AAV<em>Adeno-Associated Virus</em></h1>
+      <p class="virus-subtitle">// Non-enveloped · Icosahedral · ~26nm diameter</p>
+      <div class="meta-grid">
+        <div class="meta-card"><div class="meta-label">Family</div><div class="meta-value">Parvoviridae</div></div>
+        <div class="meta-card"><div class="meta-label">Genome</div><div class="meta-value">ssDNA · ~4.7 kb</div></div>
+        <div class="meta-card"><div class="meta-label">Capsid</div><div class="meta-value">T=1 Icosahedron</div></div>
+        <div class="meta-card"><div class="meta-label">Diameter</div><div class="meta-value">~26 nm</div></div>
+        <div class="meta-card"><div class="meta-label">Host</div><div class="meta-value">Primates</div></div>
+        <div class="meta-card"><div class="meta-label">Discovered</div><div class="meta-value">1965</div></div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Serotypes & Variants</div>
+        <p class="info-text">Thirteen naturally occurring serotypes (AAV1–AAV13) with distinct tissue tropisms determined primarily by the capsid surface. <strong>AAV2</strong> was the first to be extensively characterized; <strong>AAV9</strong> crosses the blood-brain barrier efficiently.</p>
+        <div class="serotype-list">
+          <span class="serotype-pill">AAV1 — muscle, CNS</span>
+          <span class="serotype-pill">AAV2 — broad</span>
+          <span class="serotype-pill">AAV5 — CNS, lung</span>
+          <span class="serotype-pill">AAV8 — liver</span>
+          <span class="serotype-pill">AAV9 — CNS, heart</span>
+          <span class="serotype-pill">AAV-DJ — engineered</span>
+          <span class="serotype-pill">AAVrh10 — CNS</span>
+        </div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Structural Features</div>
+        <p class="info-text">The ~26 nm T=1 icosahedral capsid is assembled from 60 subunits of three overlapping capsid proteins: <strong>VP1, VP2, VP3</strong> in a ~1:1:10 ratio. Unique regions of VP1/VP2 on the interior carry a phospholipase A2 domain essential for endosomal escape. The 5' hairpin ITRs fold into T-shaped secondary structures that initiate replication.</p>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="scan-overlay"></div>
+      <div class="canvas-wrap">
+        <canvas id="canvas-aav"></canvas>
+        <div class="canvas-label">Drag to rotate · Scroll to zoom</div>
+        <div class="canvas-controls">
+          <button class="ctrl-btn" onclick="toggleRotation('aav')">⟳</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="genome-section">
+    <div class="section-header">
+      <h2 class="section-title">Genome Map</h2>
+      <span class="section-badge">ssDNA · ~4.7 kb</span>
+    </div>
+    <div class="genome-wrap">
+      <svg viewBox="0 0 900 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <rect width="900" height="240" fill="#0d1610" rx="8"/>
+        <text x="30" y="32" font-family="'Space Mono',monospace" font-size="11" fill="#4dbe7a" letter-spacing="2">AAV GENOME (~4.7 kb)</text>
+        <text x="30" y="50" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Linear ssDNA · Inverted Terminal Repeats (ITRs) · + or − strand encapsidated</text>
+
+        <!-- Backbone -->
+        <rect x="30" y="95" width="840" height="14" rx="4" fill="#0d1610" stroke="#1e3323" stroke-width="1"/>
+
+        <!-- ITR left -->
+        <rect x="30" y="82" width="60" height="40" rx="4" fill="#1a5c38" stroke="#39ff7e" stroke-width="1.5"/>
+        <text x="60" y="97" font-family="'Space Mono',monospace" font-size="8" fill="#b4f0c4" text-anchor="middle">ITR</text>
+        <text x="60" y="109" font-family="'Space Mono',monospace" font-size="7" fill="#4dbe7a" text-anchor="middle">145 nt</text>
+        <text x="60" y="119" font-family="'Space Mono',monospace" font-size="7" fill="#4dbe7a" text-anchor="middle">hairpin</text>
+
+        <!-- p5 promoter -->
+        <rect x="94" y="88" width="18" height="16" rx="2" fill="#3b1a5c" stroke="#8b3ab0" stroke-width="1"/>
+        <text x="103" y="100" font-family="'Space Mono',monospace" font-size="7" fill="#c87af0" text-anchor="middle">p5</text>
+
+        <!-- rep gene -->
+        <rect x="114" y="75" width="280" height="42" rx="4" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="254" y="98" font-family="'Space Mono',monospace" font-size="11" fill="#5cc8f0" text-anchor="middle" font-weight="bold">REP</text>
+        <text x="254" y="112" font-family="'Space Mono',monospace" font-size="8" fill="#3a8ab0" text-anchor="middle">Rep78/68/52/40</text>
+
+        <!-- p19, p40 promoters -->
+        <rect x="156" y="88" width="18" height="10" rx="2" fill="#3b1a5c" stroke="#8b3ab0" stroke-width="1"/>
+        <text x="165" y="97" font-family="'Space Mono',monospace" font-size="6" fill="#c87af0" text-anchor="middle">p19</text>
+        <rect x="310" y="88" width="18" height="10" rx="2" fill="#3b1a5c" stroke="#8b3ab0" stroke-width="1"/>
+        <text x="319" y="97" font-family="'Space Mono',monospace" font-size="6" fill="#c87af0" text-anchor="middle">p40</text>
+
+        <!-- cap gene -->
+        <rect x="398" y="75" width="402" height="42" rx="4" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="599" y="98" font-family="'Space Mono',monospace" font-size="11" fill="#80e09a" text-anchor="middle" font-weight="bold">CAP</text>
+        <text x="599" y="112" font-family="'Space Mono',monospace" font-size="8" fill="#3a8b56" text-anchor="middle">VP1 / VP2 / VP3 · Assembly-Activating Protein (AAP)</text>
+
+        <!-- ITR right -->
+        <rect x="810" y="82" width="60" height="40" rx="4" fill="#1a5c38" stroke="#39ff7e" stroke-width="1.5"/>
+        <text x="840" y="97" font-family="'Space Mono',monospace" font-size="8" fill="#b4f0c4" text-anchor="middle">ITR</text>
+        <text x="840" y="109" font-family="'Space Mono',monospace" font-size="7" fill="#4dbe7a" text-anchor="middle">145 nt</text>
+        <text x="840" y="119" font-family="'Space Mono',monospace" font-size="7" fill="#4dbe7a" text-anchor="middle">hairpin</text>
+
+        <!-- Scale -->
+        <line x1="30" y1="148" x2="870" y2="148" stroke="#1e3323" stroke-width="0.5"/>
+        <text x="30" y="162" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560">0 kb</text>
+        <text x="450" y="162" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="middle">~2.35 kb</text>
+        <text x="870" y="162" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="end">~4.7 kb</text>
+
+        <!-- Legend -->
+        <rect x="30" y="185" width="10" height="10" rx="2" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="46" y="195" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">REP (replication/regulation)</text>
+        <rect x="280" y="185" width="10" height="10" rx="2" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="296" y="195" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">CAP (structural proteins)</text>
+        <rect x="520" y="185" width="10" height="10" rx="2" fill="#3b1a5c" stroke="#8b3ab0" stroke-width="1"/>
+        <text x="536" y="195" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Promoters (p5/p19/p40)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="discovery-section">
+    <div class="section-header"><h2 class="section-title">Discovery & History</h2></div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">1965</div>
+        <div class="timeline-text">Bob Atchison, Bill Casto, and Wallace Hammon discovered small virus-like particles contaminating adenovirus preparations at the University of Pittsburgh. Named "adeno-associated virus" for its dependence on adenovirus co-infection.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1984</div>
+        <div class="timeline-text">Srivastava and colleagues sequenced the AAV2 genome, revealing the ITRs and the bipartite rep/cap organization that would become the foundation for recombinant vectors.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1990s–2000s</div>
+        <div class="timeline-text">Development of recombinant AAV (rAAV) vectors by deleting rep and cap and replacing them with therapeutic transgenes. The ITRs alone are sufficient for packaging and long-term episomal persistence.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2017–2023</div>
+        <div class="timeline-text">Landmark FDA approvals: Luxturna (AAV2, RPE65 mutation), Zolgensma (AAV9, SMA), and Hemgenix (AAVrh74, hemophilia B). AAV becomes the dominant in vivo gene therapy platform.</div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>AAV · Parvoviridae · ssDNA</span>
+    <span><a href="#" onclick="showPage('home')">← Index</a></span>
+  </footer>
+</div>
+
+<!-- HPV -->
+<div id="hpv" class="page">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="virus-tag">Papillomaviridae · dsDNA</div>
+      <h1 class="virus-name">HPV<em>Human Papillomavirus</em></h1>
+      <p class="virus-subtitle">// Non-enveloped · Icosahedral · ~55nm diameter</p>
+      <div class="meta-grid">
+        <div class="meta-card"><div class="meta-label">Family</div><div class="meta-value">Papillomaviridae</div></div>
+        <div class="meta-card"><div class="meta-label">Genome</div><div class="meta-value">dsDNA · ~8 kbp</div></div>
+        <div class="meta-card"><div class="meta-label">Capsid</div><div class="meta-value">T=7d Icosahedron</div></div>
+        <div class="meta-card"><div class="meta-label">Diameter</div><div class="meta-value">~55 nm</div></div>
+        <div class="meta-card"><div class="meta-label">Host</div><div class="meta-value">Humans / Epithelia</div></div>
+        <div class="meta-card"><div class="meta-label">Types</div><div class="meta-value">200+ genotypes</div></div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Classification & Risk Groups</div>
+        <p class="info-text">HPVs are classified by L1 sequence identity. Over 200 types infect humans, stratified by oncogenic risk. <strong>High-risk types</strong> (α-HPVs) encode E6/E7 oncoproteins that degrade p53 and pRb.</p>
+        <div class="serotype-list">
+          <span class="serotype-pill">HR: 16, 18, 31, 33, 45</span>
+          <span class="serotype-pill">HR: 52, 58 (common in Asia)</span>
+          <span class="serotype-pill">LR: 6, 11 (condylomata)</span>
+          <span class="serotype-pill">Cutaneous: 1, 2, 3, 4</span>
+          <span class="serotype-pill">EV types: 5, 8</span>
+        </div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Structural Features</div>
+        <p class="info-text">The T=7d icosahedral capsid consists of 360 copies of <strong>L1</strong> (major capsid protein) arranged as 72 pentamers, and ~12–72 copies of <strong>L2</strong> (minor capsid protein). L1 pentamers are stabilized by intermolecular disulfide bonds. The circular dsDNA genome (~8 kb) is associated with cellular histones.</p>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="scan-overlay"></div>
+      <div class="canvas-wrap">
+        <canvas id="canvas-hpv"></canvas>
+        <div class="canvas-label">Drag to rotate · Scroll to zoom</div>
+        <div class="canvas-controls">
+          <button class="ctrl-btn" onclick="toggleRotation('hpv')">⟳</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="genome-section">
+    <div class="section-header">
+      <h2 class="section-title">Genome Map</h2>
+      <span class="section-badge">Circular dsDNA · ~8 kbp</span>
+    </div>
+    <div class="genome-wrap">
+      <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <rect width="900" height="300" fill="#0d1610" rx="8"/>
+        <text x="30" y="32" font-family="'Space Mono',monospace" font-size="11" fill="#4dbe7a" letter-spacing="2">HPV GENOME (~7.9 kbp, HPV16)</text>
+        <text x="30" y="50" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Circular dsDNA · URR · Early (E) and Late (L) ORFs on same strand</text>
+
+        <!-- Circular representation -->
+        <!-- Outer ring -->
+        <circle cx="450" cy="170" r="100" fill="none" stroke="#1e3323" stroke-width="8"/>
+
+        <!-- URR -->
+        <path d="M 450 70 A 100 100 0 0 1 530 92" fill="none" stroke="#4a3510" stroke-width="8"/>
+        <text x="505" y="62" font-family="'Space Mono',monospace" font-size="9" fill="#c8a04a" text-anchor="middle">URR</text>
+        <text x="505" y="74" font-family="'Space Mono',monospace" font-size="8" fill="#8b6a1a" text-anchor="middle">Control</text>
+
+        <!-- E6 -->
+        <path d="M 530 92 A 100 100 0 0 1 545 153" fill="none" stroke="#6a0f0f" stroke-width="8"/>
+        <text x="580" y="115" font-family="'Space Mono',monospace" font-size="9" fill="#e05050" text-anchor="middle">E6</text>
+
+        <!-- E7 -->
+        <path d="M 545 153 A 100 100 0 0 1 532 196" fill="none" stroke="#6a1010" stroke-width="8"/>
+        <text x="580" y="175" font-family="'Space Mono',monospace" font-size="9" fill="#e05050" text-anchor="middle">E7</text>
+
+        <!-- E1 -->
+        <path d="M 532 196 A 100 100 0 0 1 475 260" fill="none" stroke="#0f4a6a" stroke-width="8"/>
+        <text x="545" y="240" font-family="'Space Mono',monospace" font-size="9" fill="#5cc8f0" text-anchor="middle">E1</text>
+
+        <!-- E2 -->
+        <path d="M 475 260 A 100 100 0 0 1 390 248" fill="none" stroke="#4a1b6a" stroke-width="8"/>
+        <text x="430" y="282" font-family="'Space Mono',monospace" font-size="9" fill="#c87af0" text-anchor="middle">E2</text>
+
+        <!-- E4/E5 -->
+        <path d="M 390 248 A 100 100 0 0 1 356 198" fill="none" stroke="#1a5c38" stroke-width="8"/>
+        <text x="340" y="255" font-family="'Space Mono',monospace" font-size="9" fill="#80e09a" text-anchor="middle">E4/E5</text>
+
+        <!-- L2 -->
+        <path d="M 356 198 A 100 100 0 0 1 358 145" fill="none" stroke="#1a5c38" stroke-width="8"/>
+        <text x="318" y="175" font-family="'Space Mono',monospace" font-size="9" fill="#80e09a" text-anchor="middle">L2</text>
+
+        <!-- L1 -->
+        <path d="M 358 145 A 100 100 0 0 1 450 70" fill="none" stroke="#0f6e56" stroke-width="8"/>
+        <text x="368" y="90" font-family="'Space Mono',monospace" font-size="9" fill="#b4f0c4" text-anchor="middle">L1</text>
+
+        <!-- Center label -->
+        <text x="450" y="162" font-family="'Space Mono',monospace" font-size="10" fill="#4a7560" text-anchor="middle">HPV16</text>
+        <text x="450" y="178" font-family="'Space Mono',monospace" font-size="9" fill="#2a4632" text-anchor="middle">~7.9 kbp</text>
+
+        <!-- Legends right side -->
+        <rect x="670" y="80" width="10" height="10" rx="2" fill="#6a0f0f" stroke="#e05050" stroke-width="1"/>
+        <text x="686" y="90" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">E6/E7 — Oncoproteins</text>
+        <rect x="670" y="100" width="10" height="10" rx="2" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="686" y="110" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">E1 — Replication</text>
+        <rect x="670" y="120" width="10" height="10" rx="2" fill="#4a1b6a" stroke="#8b3ab0" stroke-width="1"/>
+        <text x="686" y="130" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">E2 — Transcription</text>
+        <rect x="670" y="140" width="10" height="10" rx="2" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="686" y="150" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">E4/E5 — Maturation</text>
+        <rect x="670" y="160" width="10" height="10" rx="2" fill="#0f6e56" stroke="#2e8b56" stroke-width="1"/>
+        <text x="686" y="170" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">L1 — Major capsid</text>
+        <rect x="670" y="180" width="10" height="10" rx="2" fill="#1a5c38" stroke="#4dbe7a" stroke-width="1"/>
+        <text x="686" y="190" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">L2 — Minor capsid</text>
+        <rect x="670" y="200" width="10" height="10" rx="2" fill="#4a3510" stroke="#8b6a1a" stroke-width="1"/>
+        <text x="686" y="210" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">URR — Regulatory</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="discovery-section">
+    <div class="section-header"><h2 class="section-title">Discovery & History</h2></div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">1907–1933</div>
+        <div class="timeline-text">Ciuffo (1907) first demonstrated the transmissibility of human warts by cell-free filtrate. Shope (1933) showed that cottontail rabbit papillomavirus (CRPV) caused warts — the first virus proven to cause benign tumors.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1970s–1983</div>
+        <div class="timeline-text">Harald zur Hausen at DKFZ identified HPV DNA in cervical cancer tissue. His 1983–84 papers cloned HPV16 and HPV18 and demonstrated their consistent presence in cervical carcinomas, establishing the causal link.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2008</div>
+        <div class="timeline-text">Harald zur Hausen awarded the Nobel Prize in Physiology or Medicine for the discovery that HPV causes cervical cancer.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2006–2014</div>
+        <div class="timeline-text">FDA approvals of Gardasil (quadrivalent, 2006), Cervarix (bivalent, 2009), and Gardasil 9 (nonavalent, 2014). Vaccines based on L1 virus-like particles (VLPs) — no live virus required.</div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>HPV · Papillomaviridae · dsDNA</span>
+    <span><a href="#" onclick="showPage('home')">← Index</a></span>
+  </footer>
+</div>
+
+<!-- VSV -->
+<div id="vsv" class="page">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="virus-tag">Rhabdoviridae · ssRNA(−)</div>
+      <h1 class="virus-name">VSV<em>Vesicular Stomatitis Virus</em></h1>
+      <p class="virus-subtitle">// Enveloped · Bullet-shaped · ~70×180nm</p>
+      <div class="meta-grid">
+        <div class="meta-card"><div class="meta-label">Family</div><div class="meta-value">Rhabdoviridae</div></div>
+        <div class="meta-card"><div class="meta-label">Genome</div><div class="meta-value">ssRNA(−) · ~11.2 kb</div></div>
+        <div class="meta-card"><div class="meta-label">Morphology</div><div class="meta-value">Bullet-shaped</div></div>
+        <div class="meta-card"><div class="meta-label">Size</div><div class="meta-value">70 × 180 nm</div></div>
+        <div class="meta-card"><div class="meta-label">Host</div><div class="meta-value">Mammals / Insects</div></div>
+        <div class="meta-card"><div class="meta-label">Serotypes</div><div class="meta-value">Indiana, New Jersey</div></div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Classification & Serotypes</div>
+        <p class="info-text">VSV belongs to genus <em>Vesiculovirus</em> within Rhabdoviridae. Two main serotypes: <strong>VSV-Indiana</strong> (most studied, prototype strain) and <strong>VSV-New Jersey</strong>. Indiana type includes subtypes Mudd-Summers (VSIV) and Orsay.</p>
+        <div class="serotype-list">
+          <span class="serotype-pill">VSV-Indiana (VSIV)</span>
+          <span class="serotype-pill">VSV-New Jersey (VSNJV)</span>
+          <span class="serotype-pill">VSV-Alagoas</span>
+          <span class="serotype-pill">Cocal virus</span>
+          <span class="serotype-pill">Isfahan virus</span>
+        </div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Structural Features</div>
+        <p class="info-text">VSV has a distinctive bullet shape formed by a tight helical <strong>nucleocapsid</strong> (RNA+N protein) coiled within a matrix (<strong>M protein</strong>) layer, all enclosed in a host-derived <strong>lipid envelope</strong> studded with ~1200 trimeric <strong>G protein</strong> spikes — the sole surface glycoprotein mediating fusion and entry via LDL receptor family members.</p>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="scan-overlay"></div>
+      <div class="canvas-wrap">
+        <canvas id="canvas-vsv"></canvas>
+        <div class="canvas-label">Drag to rotate · Scroll to zoom</div>
+        <div class="canvas-controls">
+          <button class="ctrl-btn" onclick="toggleRotation('vsv')">⟳</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="genome-section">
+    <div class="section-header">
+      <h2 class="section-title">Genome Map</h2>
+      <span class="section-badge">ssRNA(−) · ~11.2 kb · 3′→5′</span>
+    </div>
+    <div class="genome-wrap">
+      <svg viewBox="0 0 900 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <rect width="900" height="240" fill="#0d1610" rx="8"/>
+        <text x="30" y="32" font-family="'Space Mono',monospace" font-size="11" fill="#4dbe7a" letter-spacing="2">VSV GENOME (~11.2 kb)</text>
+        <text x="30" y="50" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Negative-sense ssRNA · 3′ leader → N → P → M → G → L → 5′ trailer</text>
+
+        <!-- Direction arrows -->
+        <text x="30" y="72" font-family="'Space Mono',monospace" font-size="9" fill="#2a4632">3′</text>
+        <text x="856" y="72" font-family="'Space Mono',monospace" font-size="9" fill="#2a4632">5′</text>
+        <line x1="48" y1="68" x2="848" y2="68" stroke="#1e3323" stroke-width="1" marker-end="url(#arrow-g)"/>
+        <defs><marker id="arrow-g" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a4632"/></marker></defs>
+
+        <!-- Backbone -->
+        <rect x="30" y="95" width="840" height="14" rx="4" fill="#0d1610" stroke="#1e3323" stroke-width="1"/>
+
+        <!-- Leader -->
+        <rect x="30" y="86" width="36" height="32" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="48" y="106" font-family="'Space Mono',monospace" font-size="7" fill="#80e09a" text-anchor="middle">ldr</text>
+
+        <!-- N gene -->
+        <rect x="70" y="78" width="140" height="48" rx="4" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="140" y="99" font-family="'Space Mono',monospace" font-size="11" fill="#5cc8f0" text-anchor="middle" font-weight="bold">N</text>
+        <text x="140" y="115" font-family="'Space Mono',monospace" font-size="8" fill="#3a8ab0" text-anchor="middle">Nucleoprotein</text>
+
+        <!-- P gene -->
+        <rect x="214" y="78" width="120" height="48" rx="4" fill="#4a1b6a" stroke="#8b3ab0" stroke-width="1"/>
+        <text x="274" y="99" font-family="'Space Mono',monospace" font-size="11" fill="#c87af0" text-anchor="middle" font-weight="bold">P</text>
+        <text x="274" y="115" font-family="'Space Mono',monospace" font-size="8" fill="#8b4ab0" text-anchor="middle">Phosphoprotein</text>
+
+        <!-- M gene -->
+        <rect x="338" y="78" width="120" height="48" rx="4" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="398" y="99" font-family="'Space Mono',monospace" font-size="11" fill="#80e09a" text-anchor="middle" font-weight="bold">M</text>
+        <text x="398" y="115" font-family="'Space Mono',monospace" font-size="8" fill="#3a8b56" text-anchor="middle">Matrix protein</text>
+
+        <!-- G gene -->
+        <rect x="462" y="78" width="140" height="48" rx="4" fill="#6a1a1a" stroke="#b03a3a" stroke-width="1.5"/>
+        <text x="532" y="99" font-family="'Space Mono',monospace" font-size="11" fill="#f08080" text-anchor="middle" font-weight="bold">G</text>
+        <text x="532" y="115" font-family="'Space Mono',monospace" font-size="8" fill="#b06060" text-anchor="middle">Glycoprotein (spike)</text>
+
+        <!-- L gene - largest -->
+        <rect x="606" y="78" width="258" height="48" rx="4" fill="#3b3b0f" stroke="#8b8b1a" stroke-width="1"/>
+        <text x="735" y="99" font-family="'Space Mono',monospace" font-size="11" fill="#d4d450" text-anchor="middle" font-weight="bold">L</text>
+        <text x="735" y="115" font-family="'Space Mono',monospace" font-size="8" fill="#8b8b3a" text-anchor="middle">Large protein (RNA-dep. RNA polymerase)</text>
+
+        <!-- Trailer -->
+        <rect x="834" y="90" width="36" height="28" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="852" y="108" font-family="'Space Mono',monospace" font-size="7" fill="#80e09a" text-anchor="middle">trl</text>
+
+        <!-- Scale -->
+        <line x1="30" y1="150" x2="870" y2="150" stroke="#1e3323" stroke-width="0.5"/>
+        <text x="30" y="164" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560">3′</text>
+        <text x="450" y="164" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="middle">~5.6 kb</text>
+        <text x="870" y="164" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="end">5′ ~11.2 kb</text>
+
+        <!-- Legend -->
+        <rect x="30" y="190" width="10" height="10" rx="2" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="46" y="200" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">N — Encapsidation</text>
+        <rect x="200" y="190" width="10" height="10" rx="2" fill="#4a1b6a" stroke="#8b3ab0" stroke-width="1"/>
+        <text x="216" y="200" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">P — Polymerase co-factor</text>
+        <rect x="420" y="190" width="10" height="10" rx="2" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="436" y="200" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">M — Budding/assembly</text>
+        <rect x="30" y="212" width="10" height="10" rx="2" fill="#6a1a1a" stroke="#b03a3a" stroke-width="1"/>
+        <text x="46" y="222" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">G — Entry glycoprotein</text>
+        <rect x="200" y="212" width="10" height="10" rx="2" fill="#3b3b0f" stroke="#8b8b1a" stroke-width="1"/>
+        <text x="216" y="222" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">L — RNA-dependent RNA polymerase</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="discovery-section">
+    <div class="section-header"><h2 class="section-title">Discovery & History</h2></div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">1925</div>
+        <div class="timeline-text">First described as the causative agent of vesicular stomatitis in cattle and horses in the United States. The disease causes vesicular lesions on the tongue and feet, resembling foot-and-mouth disease — prompting careful epidemiological distinction.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1962–1970s</div>
+        <div class="timeline-text">VSV became a premier model system for studying RNA virus biology due to its rapid growth, simple 5-gene genome, and tractability. Studies by Huang, Baltimore, and colleagues defined the negative-sense RNA replication cycle and the role of the L protein RdRp.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2005</div>
+        <div class="timeline-text">Recombinant VSV (rVSV) vectors developed as vaccine platforms. The rVSV-ZEBOV (Ervebo) Ebola vaccine uses VSV-Indiana with its G protein replaced by Ebola virus GP — approved by FDA/EMA in 2019.</div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>VSV · Rhabdoviridae · ssRNA(−)</span>
+    <span><a href="#" onclick="showPage('home')">← Index</a></span>
+  </footer>
+</div>
+
+<!-- SFV -->
+<div id="sfv" class="page">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="virus-tag">Togaviridae · ssRNA(+)</div>
+      <h1 class="virus-name">SFV<em>Semliki Forest Virus</em></h1>
+      <p class="virus-subtitle">// Enveloped · Spherical · ~70nm diameter</p>
+      <div class="meta-grid">
+        <div class="meta-card"><div class="meta-label">Family</div><div class="meta-value">Togaviridae</div></div>
+        <div class="meta-card"><div class="meta-label">Genome</div><div class="meta-value">ssRNA(+) · ~11.4 kb</div></div>
+        <div class="meta-card"><div class="meta-label">Capsid</div><div class="meta-value">T=4 Icosahedral</div></div>
+        <div class="meta-card"><div class="meta-label">Diameter</div><div class="meta-value">~70 nm</div></div>
+        <div class="meta-card"><div class="meta-label">Host</div><div class="meta-value">Mammals / Insects</div></div>
+        <div class="meta-card"><div class="meta-label">Genus</div><div class="meta-value">Alphavirus</div></div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Classification</div>
+        <p class="info-text">SFV is a prototypic member of the <em>Alphavirus</em> genus, closely related to chikungunya (CHIKV), Ross River (RRV), and Sindbis (SINV) viruses. Alphaviruses are arboviral — transmitted by arthropod vectors (mosquitoes). SFV itself is non-pathogenic to humans.</p>
+        <div class="serotype-list">
+          <span class="serotype-pill">Semliki Forest (SFV)</span>
+          <span class="serotype-pill">Sindbis (SINV)</span>
+          <span class="serotype-pill">Chikungunya (CHIKV)</span>
+          <span class="serotype-pill">Ross River (RRV)</span>
+          <span class="serotype-pill">Eastern EEV</span>
+          <span class="serotype-pill">Venezuelan EEV</span>
+        </div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Structural Features</div>
+        <p class="info-text">An icosahedral T=4 nucleocapsid (240 copies of <strong>capsid protein</strong>) is surrounded by a host lipid bilayer through which project 80 trimeric spike complexes of heterodimeric <strong>E1/E2</strong> glycoproteins. E2 mediates receptor binding; E1 contains a class II fusion peptide that drives low-pH endosomal fusion.</p>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="scan-overlay"></div>
+      <div class="canvas-wrap">
+        <canvas id="canvas-sfv"></canvas>
+        <div class="canvas-label">Drag to rotate · Scroll to zoom</div>
+        <div class="canvas-controls">
+          <button class="ctrl-btn" onclick="toggleRotation('sfv')">⟳</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="genome-section">
+    <div class="section-header">
+      <h2 class="section-title">Genome Map</h2>
+      <span class="section-badge">ssRNA(+) · ~11.4 kb · mRNA-sense</span>
+    </div>
+    <div class="genome-wrap">
+      <svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <rect width="900" height="260" fill="#0d1610" rx="8"/>
+        <text x="30" y="32" font-family="'Space Mono',monospace" font-size="11" fill="#4dbe7a" letter-spacing="2">SEMLIKI FOREST VIRUS GENOME (~11.4 kb)</text>
+        <text x="30" y="50" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Positive-sense ssRNA · 5′ cap · 3′ poly-A tail · Subgenomic RNA strategy</text>
+
+        <!-- 5' cap -->
+        <rect x="30" y="90" width="20" height="30" rx="3" fill="#1a5c38" stroke="#4dbe7a" stroke-width="1.5"/>
+        <text x="40" y="109" font-family="'Space Mono',monospace" font-size="7" fill="#b4f0c4" text-anchor="middle">5′</text>
+
+        <!-- Non-structural proteins (nsP1-4) - upstream ~8kb -->
+        <rect x="54" y="82" width="460" height="46" rx="4" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="284" y="101" font-family="'Space Mono',monospace" font-size="10" fill="#5cc8f0" text-anchor="middle" font-weight="bold">NON-STRUCTURAL ORF1  (~8 kb)</text>
+        <text x="284" y="117" font-family="'Space Mono',monospace" font-size="8" fill="#3a8ab0" text-anchor="middle">nsP1 (capping) · nsP2 (helicase/protease) · nsP3 (replication complex) · nsP4 (RdRp)</text>
+
+        <!-- nsP1 divider -->
+        <line x1="150" y1="82" x2="150" y2="128" stroke="#1a7ab0" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <text x="102" y="138" font-family="'Space Mono',monospace" font-size="8" fill="#3a8ab0" text-anchor="middle">nsP1</text>
+        <line x1="244" y1="82" x2="244" y2="128" stroke="#1a7ab0" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <text x="197" y="138" font-family="'Space Mono',monospace" font-size="8" fill="#3a8ab0" text-anchor="middle">nsP2</text>
+        <line x1="350" y1="82" x2="350" y2="128" stroke="#1a7ab0" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <text x="297" y="138" font-family="'Space Mono',monospace" font-size="8" fill="#3a8ab0" text-anchor="middle">nsP3</text>
+        <text x="422" y="138" font-family="'Space Mono',monospace" font-size="8" fill="#3a8ab0" text-anchor="middle">nsP4</text>
+
+        <!-- Subgenomic promoter -->
+        <rect x="518" y="97" width="18" height="20" rx="2" fill="#3b3b0f" stroke="#8b8b1a" stroke-width="1"/>
+        <text x="527" y="111" font-family="'Space Mono',monospace" font-size="7" fill="#d4d450" text-anchor="middle">26S</text>
+
+        <!-- Structural ORF -->
+        <rect x="540" y="82" width="310" height="46" rx="4" fill="#1a3a5c" stroke="#2e7ab0" stroke-width="1"/>
+        <text x="695" y="101" font-family="'Space Mono',monospace" font-size="10" fill="#80c8f0" text-anchor="middle" font-weight="bold">STRUCTURAL ORF  (~3.7 kb)</text>
+        <text x="695" y="117" font-family="'Space Mono',monospace" font-size="8" fill="#3a6a8b" text-anchor="middle">C · E3 · E2 · 6K · E1</text>
+
+        <!-- Dividers in structural ORF -->
+        <line x1="596" y1="82" x2="596" y2="128" stroke="#2e7ab0" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <text x="568" y="138" font-family="'Space Mono',monospace" font-size="8" fill="#3a6a8b" text-anchor="middle">C (cap)</text>
+        <line x1="630" y1="82" x2="630" y2="128" stroke="#2e7ab0" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <text x="613" y="138" font-family="'Space Mono',monospace" font-size="8" fill="#3a6a8b" text-anchor="middle">E3</text>
+        <line x1="706" y1="82" x2="706" y2="128" stroke="#2e7ab0" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <text x="668" y="138" font-family="'Space Mono',monospace" font-size="8" fill="#3a6a8b" text-anchor="middle">E2</text>
+        <line x1="730" y1="82" x2="730" y2="128" stroke="#2e7ab0" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <text x="718" y="138" font-family="'Space Mono',monospace" font-size="8" fill="#3a6a8b" text-anchor="middle">6K</text>
+        <text x="774" y="138" font-family="'Space Mono',monospace" font-size="8" fill="#3a6a8b" text-anchor="middle">E1</text>
+
+        <!-- 3' poly-A -->
+        <rect x="850" y="90" width="20" height="30" rx="3" fill="#1a5c38" stroke="#4dbe7a" stroke-width="1.5"/>
+        <text x="860" y="108" font-family="'Space Mono',monospace" font-size="7" fill="#b4f0c4" text-anchor="middle">3′</text>
+
+        <!-- Subgenomic RNA arrow -->
+        <text x="527" y="162" font-family="'Space Mono',monospace" font-size="8" fill="#8b8b1a" text-anchor="middle">↑ 26S subgenomic RNA</text>
+        <line x1="527" y1="154" x2="527" y2="148" stroke="#8b8b1a" stroke-width="0.5" stroke-dasharray="2,2"/>
+
+        <!-- Scale -->
+        <line x1="30" y1="175" x2="870" y2="175" stroke="#1e3323" stroke-width="0.5"/>
+        <text x="30" y="189" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560">0 kb</text>
+        <text x="450" y="189" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="middle">~5.7 kb</text>
+        <text x="870" y="189" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="end">~11.4 kb</text>
+
+        <!-- Legend -->
+        <rect x="30" y="210" width="10" height="10" rx="2" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="46" y="220" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">nsP1–4: Non-structural / replication</text>
+        <rect x="310" y="210" width="10" height="10" rx="2" fill="#1a3a5c" stroke="#2e7ab0" stroke-width="1"/>
+        <text x="326" y="220" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Structural: capsid + E glycoproteins</text>
+        <rect x="590" y="210" width="10" height="10" rx="2" fill="#3b3b0f" stroke="#8b8b1a" stroke-width="1"/>
+        <text x="606" y="220" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">26S subgenomic promoter</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="discovery-section">
+    <div class="section-header"><h2 class="section-title">Discovery & History</h2></div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">1942</div>
+        <div class="timeline-text">Isolated by Smithburn and Haddow from Aedes abnormalis mosquitoes collected in the Semliki Forest of western Uganda. Named for its site of discovery. The virus showed neurotropic properties in experimental animals.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1960s–1980s</div>
+        <div class="timeline-text">SFV became a model for studying alphavirus biology. Ari Helenius and Kai Simons used SFV to elucidate lipid bilayer structure and membrane protein assembly, earning it prominence in membrane biology research.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1991–present</div>
+        <div class="timeline-text">Kenneth Lundstrom and colleagues developed SFV as a high-level expression vector. The subgenomic promoter allows massive structural protein overexpression. rSFV vectors deployed for vaccine antigens, protein production, and oncolytic applications.</div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>SFV · Togaviridae · ssRNA(+)</span>
+    <span><a href="#" onclick="showPage('home')">← Index</a></span>
+  </footer>
+</div>
+
+<!-- VACCINIA -->
+<div id="vaccinia" class="page">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="virus-tag">Poxviridae · dsDNA</div>
+      <h1 class="virus-name">Vaccinia<em>Vaccinia Virus (VACV)</em></h1>
+      <p class="virus-subtitle">// Enveloped · Brick-shaped · ~360×270nm</p>
+      <div class="meta-grid">
+        <div class="meta-card"><div class="meta-label">Family</div><div class="meta-value">Poxviridae</div></div>
+        <div class="meta-card"><div class="meta-label">Genome</div><div class="meta-value">dsDNA · ~190 kbp</div></div>
+        <div class="meta-card"><div class="meta-label">Morphology</div><div class="meta-value">Brick-shaped IMV</div></div>
+        <div class="meta-card"><div class="meta-label">Size</div><div class="meta-value">360 × 270 nm</div></div>
+        <div class="meta-card"><div class="meta-label">Genus</div><div class="meta-value">Orthopoxvirus</div></div>
+        <div class="meta-card"><div class="meta-label">Forms</div><div class="meta-value">IMV, IEV, CEV, EEV</div></div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Classification & Strains</div>
+        <p class="info-text">Vaccinia belongs to the genus <em>Orthopoxvirus</em>, which also includes variola (smallpox), monkeypox, and cowpox. Multiple VACV strains exist with varying virulence: <strong>Western Reserve (WR)</strong> for lab use, <strong>Modified Vaccinia Ankara (MVA)</strong> as an attenuated vaccine vector, <strong>NYVAC</strong>, and <strong>Dryvax</strong> (historic smallpox vaccine).</p>
+        <div class="serotype-list">
+          <span class="serotype-pill">WR (Western Reserve)</span>
+          <span class="serotype-pill">MVA (Modified Ankara)</span>
+          <span class="serotype-pill">NYVAC (attenuated)</span>
+          <span class="serotype-pill">Lister/Elstree</span>
+          <span class="serotype-pill">IHD-J strain</span>
+        </div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Structural Features</div>
+        <p class="info-text">VACV produces multiple infectious forms: <strong>IMV</strong> (intracellular mature virion) — the most abundant, with a biconcave core; <strong>IEV</strong> (intracellular enveloped virion, double-wrapped); <strong>CEV/EEV</strong> (cell-associated/extracellular enveloped virions). The IMV membrane contains ~20 viral proteins. The genome (~190 kb linear dsDNA) is entirely replicated and transcribed in the cytoplasm, carrying its own transcription machinery.</p>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="scan-overlay"></div>
+      <div class="canvas-wrap">
+        <canvas id="canvas-vaccinia"></canvas>
+        <div class="canvas-label">Drag to rotate · Scroll to zoom</div>
+        <div class="canvas-controls">
+          <button class="ctrl-btn" onclick="toggleRotation('vaccinia')">⟳</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="genome-section">
+    <div class="section-header">
+      <h2 class="section-title">Genome Map</h2>
+      <span class="section-badge">Linear dsDNA · ~190 kbp · Hairpin termini</span>
+    </div>
+    <div class="genome-wrap">
+      <svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <rect width="900" height="280" fill="#0d1610" rx="8"/>
+        <text x="30" y="32" font-family="'Space Mono',monospace" font-size="11" fill="#4dbe7a" letter-spacing="2">VACCINIA VIRUS GENOME (~190 kbp)</text>
+        <text x="30" y="50" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560">Linear dsDNA · Covalently-closed hairpin termini (HpTels) · ~200 ORFs · Cytoplasmic replication</text>
+
+        <!-- Backbone -->
+        <rect x="30" y="100" width="840" height="14" rx="4" fill="#0d1610" stroke="#1e3323" stroke-width="1"/>
+
+        <!-- Left hairpin -->
+        <rect x="30" y="88" width="30" height="38" rx="8" fill="#4a3510" stroke="#c8a04a" stroke-width="1.5"/>
+        <text x="45" y="111" font-family="'Space Mono',monospace" font-size="7" fill="#c8a04a" text-anchor="middle">HpL</text>
+
+        <!-- Left ITR -->
+        <rect x="64" y="92" width="60" height="30" rx="3" fill="#3b3b0f" stroke="#8b8b1a" stroke-width="1"/>
+        <text x="94" y="111" font-family="'Space Mono',monospace" font-size="8" fill="#d4d450" text-anchor="middle">ITR-L</text>
+
+        <!-- Immune evasion left -->
+        <rect x="128" y="84" width="90" height="46" rx="3" fill="#6a0f0f" stroke="#b03a3a" stroke-width="1"/>
+        <text x="173" y="104" font-family="'Space Mono',monospace" font-size="8" fill="#f08080" text-anchor="middle">Immune</text>
+        <text x="173" y="117" font-family="'Space Mono',monospace" font-size="8" fill="#f08080" text-anchor="middle">Evasion</text>
+
+        <!-- Early genes cluster -->
+        <rect x="222" y="84" width="110" height="46" rx="3" fill="#0f4a6a" stroke="#1a7ab0" stroke-width="1"/>
+        <text x="277" y="104" font-family="'Space Mono',monospace" font-size="8" fill="#5cc8f0" text-anchor="middle">Early Gene</text>
+        <text x="277" y="117" font-family="'Space Mono',monospace" font-size="8" fill="#3a8ab0" text-anchor="middle">Cluster</text>
+
+        <!-- DNA replication / Transcription machinery -->
+        <rect x="336" y="80" width="230" height="54" rx="4" fill="#4a1b6a" stroke="#8b3ab0" stroke-width="1.5"/>
+        <text x="451" y="103" font-family="'Space Mono',monospace" font-size="9" fill="#c87af0" text-anchor="middle" font-weight="bold">Replication · Transcription</text>
+        <text x="451" y="118" font-family="'Space Mono',monospace" font-size="8" fill="#8b4ab0" text-anchor="middle">DNA pol · Primase · RNA pol subunits · Capping</text>
+
+        <!-- Structural proteins -->
+        <rect x="570" y="84" width="130" height="46" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="635" y="104" font-family="'Space Mono',monospace" font-size="8" fill="#80e09a" text-anchor="middle">Structural</text>
+        <text x="635" y="117" font-family="'Space Mono',monospace" font-size="8" fill="#3a8b56" text-anchor="middle">Proteins</text>
+
+        <!-- Immune evasion right -->
+        <rect x="704" y="84" width="88" height="46" rx="3" fill="#6a0f0f" stroke="#b03a3a" stroke-width="1"/>
+        <text x="748" y="104" font-family="'Space Mono',monospace" font-size="8" fill="#f08080" text-anchor="middle">Immune</text>
+        <text x="748" y="117" font-family="'Space Mono',monospace" font-size="8" fill="#f08080" text-anchor="middle">Evasion</text>
+
+        <!-- Right ITR -->
+        <rect x="796" y="92" width="60" height="30" rx="3" fill="#3b3b0f" stroke="#8b8b1a" stroke-width="1"/>
+        <text x="826" y="111" font-family="'Space Mono',monospace" font-size="8" fill="#d4d450" text-anchor="middle">ITR-R</text>
+
+        <!-- Right hairpin -->
+        <rect x="840" y="88" width="30" height="38" rx="8" fill="#4a3510" stroke="#c8a04a" stroke-width="1.5"/>
+        <text x="855" y="111" font-family="'Space Mono',monospace" font-size="7" fill="#c8a04a" text-anchor="middle">HpR</text>
+
+        <!-- Scale bar -->
+        <line x1="30" y1="158" x2="870" y2="158" stroke="#1e3323" stroke-width="0.5"/>
+        <text x="30" y="172" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560">0 kbp</text>
+        <text x="450" y="172" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="middle">~95 kbp</text>
+        <text x="870" y="172" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560" text-anchor="end">~190 kbp</text>
+
+        <!-- IMV particle forms diagram -->
+        <text x="30" y="200" font-family="'Space Mono',monospace" font-size="9" fill="#4a7560" letter-spacing="1">PARTICLE FORMS:</text>
+
+        <!-- IMV box -->
+        <rect x="30" y="210" width="52" height="26" rx="3" fill="#1a5c38" stroke="#4dbe7a" stroke-width="1"/>
+        <rect x="34" y="214" width="44" height="18" rx="2" fill="#0d1610"/>
+        <text x="56" y="226" font-family="'Space Mono',monospace" font-size="7" fill="#4dbe7a" text-anchor="middle">IMV</text>
+
+        <!-- IEV -->
+        <rect x="102" y="208" width="60" height="30" rx="6" fill="none" stroke="#4dbe7a" stroke-width="1" stroke-dasharray="3,2"/>
+        <rect x="108" y="212" width="48" height="22" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <rect x="112" y="216" width="40" height="14" rx="2" fill="#0d1610"/>
+        <text x="132" y="228" font-family="'Space Mono',monospace" font-size="7" fill="#4dbe7a" text-anchor="middle">IEV</text>
+
+        <!-- EEV -->
+        <rect x="186" y="207" width="70" height="32" rx="8" fill="none" stroke="#4dbe7a" stroke-width="1" stroke-dasharray="4,2"/>
+        <rect x="193" y="210" width="56" height="26" rx="5" fill="none" stroke="#4dbe7a" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+        <rect x="198" y="214" width="46" height="18" rx="3" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <rect x="202" y="217" width="38" height="12" rx="2" fill="#0d1610"/>
+        <text x="221" y="228" font-family="'Space Mono',monospace" font-size="7" fill="#4dbe7a" text-anchor="middle">EEV</text>
+
+        <text x="280" y="228" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560">← Progressive membrane wrapping</text>
+
+        <!-- Legend -->
+        <rect x="30" y="250" width="8" height="8" rx="1" fill="#6a0f0f" stroke="#b03a3a" stroke-width="1"/>
+        <text x="44" y="258" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560">Immune evasion</text>
+        <rect x="160" y="250" width="8" height="8" rx="1" fill="#4a1b6a" stroke="#8b3ab0" stroke-width="1"/>
+        <text x="174" y="258" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560">Replication machinery</text>
+        <rect x="320" y="250" width="8" height="8" rx="1" fill="#1a5c38" stroke="#2e8b56" stroke-width="1"/>
+        <text x="334" y="258" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560">Structural proteins</text>
+        <rect x="470" y="250" width="8" height="8" rx="1" fill="#3b3b0f" stroke="#8b8b1a" stroke-width="1"/>
+        <text x="484" y="258" font-family="'Space Mono',monospace" font-size="8" fill="#4a7560">Inverted Terminal Repeats</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="discovery-section">
+    <div class="section-header"><h2 class="section-title">Discovery & History</h2></div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">1796</div>
+        <div class="timeline-text">Edward Jenner performed the first successful vaccination, inoculating James Phipps with cowpox material to protect against smallpox. The term "vaccination" derives from <em>vacca</em> (Latin: cow). The exact origin of vaccinia virus remains debated — possibly horsepox or a hybrid.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1939</div>
+        <div class="timeline-text">Barnard documented the morphology of vaccinia by electron microscopy — among the first viruses visualized. VACV's large size (~360 nm) made it visible even by light microscopy, earning the name "elementary bodies."</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1980</div>
+        <div class="timeline-text">The WHO declared smallpox eradicated — the only human disease ever eradicated. VACV was the vaccine that made this possible; over 200 years of mass vaccination eliminated variola virus from natural circulation.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1982–present</div>
+        <div class="timeline-text">Bernard Moss and colleagues developed recombinant VACV as a vaccine vector for foreign antigens. MVA (Modified Vaccinia Ankara) — a highly attenuated strain — became a central platform for HIV, malaria, and COVID-19 vaccine candidates. Imvamune/Jynneos (MVA-based) approved for mpox prevention.</div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>VACCINIA · Poxviridae · dsDNA</span>
+    <span><a href="#" onclick="showPage('home')">← Index</a></span>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ── PAGE NAVIGATION ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  // highlight nav
+  const btns = document.querySelectorAll('.nav-btn');
+  const names = ['home','adeno','aav','hpv','vsv','sfv','vaccinia'];
+  const idx = names.indexOf(id);
+  if(idx >= 0) btns[idx].classList.add('active');
+  // init viewer for that page
+  setTimeout(() => initViewer(id), 50);
+  window.scrollTo(0, 0);
+}
+
+// ── 3D VIEWER ──
+const viewers = {};
+
+function initViewer(pageId) {
+  const cvs = document.getElementById('canvas-' + pageId);
+  if (!cvs || viewers[pageId]) return;
+
+  const wrap = cvs.parentElement;
+  const W = wrap.clientWidth || 420;
+  const H = wrap.clientHeight || 500;
+
+  const renderer = new THREE.WebGLRenderer({ canvas: cvs, antialias: true, alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(W, H);
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 1000);
+  camera.position.set(0, 0, 4);
+
+  // Lighting
+  const amb = new THREE.AmbientLight(0x112211, 0.8);
+  scene.add(amb);
+  const dir1 = new THREE.DirectionalLight(0x39ff7e, 1.2);
+  dir1.position.set(2, 3, 4);
+  scene.add(dir1);
+  const dir2 = new THREE.DirectionalLight(0x00e5a0, 0.4);
+  dir2.position.set(-3, -1, 2);
+  scene.add(dir2);
+  const pt = new THREE.PointLight(0x4dbe7a, 0.6, 20);
+  pt.position.set(0, 0, 5);
+  scene.add(pt);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  buildVirus(pageId, group, scene);
+
+  // Mouse / touch interaction
+  let isDown = false, lastX = 0, lastY = 0, velX = 0, velY = 0;
+  let autoRotate = true;
+
+  cvs.addEventListener('mousedown', e => { isDown = true; lastX = e.clientX; lastY = e.clientY; velX = velY = 0; });
+  cvs.addEventListener('mousemove', e => {
+    if (!isDown) return;
+    velX = e.clientX - lastX;
+    velY = e.clientY - lastY;
+    group.rotation.y += velX * 0.012;
+    group.rotation.x += velY * 0.012;
+    lastX = e.clientX; lastY = e.clientY;
+  });
+  cvs.addEventListener('mouseup', () => { isDown = false; autoRotate = false; setTimeout(() => autoRotate = true, 3000); });
+
+  cvs.addEventListener('wheel', e => {
+    camera.position.z = Math.max(2, Math.min(10, camera.position.z + e.deltaY * 0.005));
+  }, { passive: true });
+
+  // Touch
+  let lastTouchX = 0, lastTouchY = 0;
+  cvs.addEventListener('touchstart', e => { lastTouchX = e.touches[0].clientX; lastTouchY = e.touches[0].clientY; });
+  cvs.addEventListener('touchmove', e => {
+    group.rotation.y += (e.touches[0].clientX - lastTouchX) * 0.015;
+    group.rotation.x += (e.touches[0].clientY - lastTouchY) * 0.015;
+    lastTouchX = e.touches[0].clientX; lastTouchY = e.touches[0].clientY;
+    e.preventDefault();
+  }, { passive: false });
+
+  let animId;
+  function animate() {
+    animId = requestAnimationFrame(animate);
+    if (autoRotate && !isDown) {
+      group.rotation.y += 0.006;
+      group.rotation.x += 0.001;
+    }
+    // friction
+    if (!isDown && !autoRotate) {
+      velX *= 0.95; velY *= 0.95;
+      group.rotation.y += velX * 0.003;
+      group.rotation.x += velY * 0.003;
+    }
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // Resize
+  const ro = new ResizeObserver(() => {
+    const nW = wrap.clientWidth, nH = wrap.clientHeight;
+    renderer.setSize(nW, nH);
+    camera.aspect = nW / nH;
+    camera.updateProjectionMatrix();
+  });
+  ro.observe(wrap);
+
+  viewers[pageId] = { renderer, scene, camera, group, autoRotate: () => autoRotate, setRotate: v => autoRotate = v, animId };
+}
+
+function toggleRotation(pageId) {
+  const v = viewers[pageId];
+  if (v) v.setRotate(!v.autoRotate());
+}
+
+// ── VIRUS GEOMETRIES ──
+function buildVirus(id, group, scene) {
+  const GREEN = 0x2e8b56;
+  const GLOW  = 0x39ff7e;
+  const DARK  = 0x0d3320;
+  const TEAL  = 0x00b4a0;
+  const LIME  = 0x80e09a;
+
+  if (id === 'adeno') {
+    // Icosahedral capsid with fiber spikes
+    const mat = new THREE.MeshPhongMaterial({
+      color: 0x1a5c38, emissive: 0x0d3320, wireframe: false,
+      transparent: true, opacity: 0.92, shininess: 80
+    });
+    const wMat = new THREE.MeshBasicMaterial({ color: GLOW, wireframe: true, transparent: true, opacity: 0.15 });
+    const geo = new THREE.IcosahedronGeometry(1.2, 2);
+    group.add(new THREE.Mesh(geo, mat));
+    group.add(new THREE.Mesh(geo, wMat));
+
+    // Fiber spikes at icosahedron vertices
+    const verts = getIcoVerts(1.2);
+    verts.forEach(v => {
+      const dir = v.clone().normalize();
+      const fiberMat = new THREE.MeshPhongMaterial({ color: GLOW, emissive: 0x1a5c38 });
+      const fiber = new THREE.CylinderGeometry(0.025, 0.025, 0.5, 6);
+      const m = new THREE.Mesh(fiber, fiberMat);
+      const mid = v.clone().add(dir.clone().multiplyScalar(0.25));
+      m.position.copy(mid);
+      m.lookAt(v.clone().add(dir));
+      m.rotateX(Math.PI / 2);
+      group.add(m);
+      // Knob at end
+      const knob = new THREE.SphereGeometry(0.06, 8, 8);
+      const km = new THREE.Mesh(knob, fiberMat);
+      km.position.copy(v.clone().add(dir.clone().multiplyScalar(0.5)));
+      group.add(km);
+    });
+
+  } else if (id === 'aav') {
+    // Smaller icosahedron, highly symmetric
+    const mat = new THREE.MeshPhongMaterial({ color: 0x0f6e56, emissive: 0x062a20, shininess: 120 });
+    const wMat = new THREE.MeshBasicMaterial({ color: 0x4dbe7a, wireframe: true, transparent: true, opacity: 0.2 });
+    const geo = new THREE.IcosahedronGeometry(1.1, 1);
+    group.add(new THREE.Mesh(geo, mat));
+    group.add(new THREE.Mesh(geo, wMat));
+
+    // Protrusions at 3-fold axes (characteristic of AAV)
+    const threeFold = getThreeFoldAxes(1.1);
+    threeFold.forEach(v => {
+      const bumpMat = new THREE.MeshPhongMaterial({ color: GLOW, emissive: 0x1a5c38, shininess: 100 });
+      const bump = new THREE.SphereGeometry(0.12, 8, 8);
+      const m = new THREE.Mesh(bump, bumpMat);
+      m.position.copy(v.clone().multiplyScalar(1.08));
+      group.add(m);
+    });
+
+  } else if (id === 'hpv') {
+    // T=7 icosahedron with visible pentamers
+    const mat = new THREE.MeshPhongMaterial({ color: 0x163d28, emissive: 0x0a1e14, shininess: 60 });
+    const geo = new THREE.IcosahedronGeometry(1.15, 2);
+    group.add(new THREE.Mesh(geo, mat));
+    // L1 pentamers as spheres at vertices + edges
+    const verts = getIcoVerts(1.15);
+    verts.forEach(v => {
+      const pentMat = new THREE.MeshPhongMaterial({ color: 0x2e8b56, emissive: 0x0d3320, shininess: 100 });
+      const s = new THREE.SphereGeometry(0.1, 10, 10);
+      const m = new THREE.Mesh(s, pentMat);
+      m.position.copy(v);
+      group.add(m);
+    });
+    // wireframe
+    const wMat = new THREE.MeshBasicMaterial({ color: 0x39ff7e, wireframe: true, transparent: true, opacity: 0.1 });
+    group.add(new THREE.Mesh(geo, wMat));
+
+  } else if (id === 'vsv') {
+    // Bullet shape using CylinderGeometry + SphereGeometry cap
+    const mat = new THREE.MeshPhongMaterial({ color: 0x1a5c38, emissive: 0x0a2a1a, shininess: 40 });
+    // Body - cylinder for bullet (use CapsuleGeometry workaround with cylinder+sphere)
+    const body = new THREE.CylinderGeometry(0.65, 0.65, 1.6, 32);
+    group.add(new THREE.Mesh(body, mat));
+    // Rounded top
+    const topCap = new THREE.SphereGeometry(0.65, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+    const tcm = new THREE.Mesh(topCap, mat);
+    tcm.position.y = 0.8;
+    group.add(tcm);
+    // Flat bottom
+    const botCap = new THREE.CircleGeometry(0.65, 32);
+    const bcMat = new THREE.MeshPhongMaterial({ color: 0x1a5c38, emissive: 0x0a2a1a, shininess: 40, side: THREE.DoubleSide });
+    const bcm = new THREE.Mesh(botCap, bcMat);
+    bcm.position.y = -0.8;
+    bcm.rotation.x = Math.PI / 2;
+    group.add(bcm);
+    // G-protein spikes
+    for (let a = 0; a < Math.PI * 2; a += Math.PI / 8) {
+      for (let h = -0.6; h <= 0.6; h += 0.5) {
+        const spikeMat = new THREE.MeshPhongMaterial({ color: GLOW, emissive: 0x1a5c38 });
+        const spike = new THREE.ConeGeometry(0.05, 0.3, 6);
+        const sm = new THREE.Mesh(spike, spikeMat);
+        sm.position.set(Math.cos(a) * 0.68, h, Math.sin(a) * 0.68);
+        sm.lookAt(new THREE.Vector3(Math.cos(a) * 2, h, Math.sin(a) * 2));
+        sm.rotateX(Math.PI / 2);
+        group.add(sm);
+      }
+    }
+    group.rotation.z = 0.4;
+
+  } else if (id === 'sfv') {
+    // Spherical with lipid envelope visible + spikes
+    const envMat = new THREE.MeshPhongMaterial({
+      color: 0x0d3320, emissive: 0x041a0a,
+      transparent: true, opacity: 0.55, side: THREE.DoubleSide, shininess: 20
+    });
+    const capMat = new THREE.MeshPhongMaterial({ color: 0x2e8b56, emissive: 0x0d3320, shininess: 80 });
+    const env = new THREE.SphereGeometry(1.2, 32, 32);
+    group.add(new THREE.Mesh(env, envMat));
+    const cap = new THREE.SphereGeometry(0.85, 24, 24);
+    group.add(new THREE.Mesh(cap, capMat));
+    const capWire = new THREE.MeshBasicMaterial({ color: 0x4dbe7a, wireframe: true, transparent: true, opacity: 0.12 });
+    const capGeo = new THREE.IcosahedronGeometry(0.85, 2);
+    group.add(new THREE.Mesh(capGeo, capWire));
+    // E1/E2 spike complexes
+    for (let i = 0; i < 80; i++) {
+      const phi = Math.acos(1 - 2 * i / 80);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+      const x = Math.sin(phi) * Math.cos(theta);
+      const y = Math.cos(phi);
+      const z = Math.sin(phi) * Math.sin(theta);
+      const spikeMat = new THREE.MeshPhongMaterial({ color: 0x39ff7e, emissive: 0x0d5c2a });
+      const spike = new THREE.ConeGeometry(0.04, 0.25, 6);
+      const sm = new THREE.Mesh(spike, spikeMat);
+      sm.position.set(x * 1.2, y * 1.2, z * 1.2);
+      sm.lookAt(new THREE.Vector3(x * 3, y * 3, z * 3));
+      sm.rotateX(Math.PI / 2);
+      group.add(sm);
+    }
+
+  } else if (id === 'vaccinia') {
+    // Brick shape: box with rounded corners (use BoxGeometry)
+    const mat = new THREE.MeshPhongMaterial({ color: 0x1a5c38, emissive: 0x0a2a1a, shininess: 30 });
+    const brick = new THREE.BoxGeometry(2.0, 1.4, 1.0, 4, 4, 4);
+    group.add(new THREE.Mesh(brick, mat));
+    const wMat = new THREE.MeshBasicMaterial({ color: 0x39ff7e, wireframe: true, transparent: true, opacity: 0.08 });
+    group.add(new THREE.Mesh(brick, wMat));
+    // Surface proteins
+    const pMat = new THREE.MeshPhongMaterial({ color: GLOW, emissive: 0x1a5c38 });
+    for (let x = -0.8; x <= 0.8; x += 0.4) {
+      for (let y = -0.5; y <= 0.5; y += 0.35) {
+        const sp = new THREE.SphereGeometry(0.06, 6, 6);
+        const m = new THREE.Mesh(sp, pMat);
+        // Top face
+        m.position.set(x, 0.7, (Math.random() - 0.5) * 0.8);
+        group.add(m.clone());
+        // Front face
+        const m2 = m.clone(); m2.position.set(x, y, 0.52); group.add(m2);
+      }
+    }
+    // Biconcave core hint
+    const coreMat = new THREE.MeshPhongMaterial({ color: 0x0d3320, emissive: 0x041a0a, transparent: true, opacity: 0.7 });
+    const core = new THREE.SphereGeometry(0.5, 16, 16);
+    group.add(new THREE.Mesh(core, coreMat));
+    group.rotation.y = 0.5;
+    group.rotation.x = 0.3;
+  }
+}
+
+function getIcoVerts(r) {
+  const geo = new THREE.IcosahedronGeometry(r, 0);
+  const pos = geo.attributes.position;
+  const verts = [];
+  const seen = new Set();
+  for (let i = 0; i < pos.count; i++) {
+    const v = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
+    const key = v.x.toFixed(3) + ',' + v.y.toFixed(3) + ',' + v.z.toFixed(3);
+    if (!seen.has(key)) { seen.add(key); verts.push(v); }
+  }
+  return verts;
+}
+
+function getThreeFoldAxes(r) {
+  // 3-fold axes of icosahedron are face centers
+  const geo = new THREE.IcosahedronGeometry(r, 0);
+  const pos = geo.attributes.position;
+  const faces = [];
+  for (let i = 0; i < pos.count; i += 3) {
+    const a = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
+    const b = new THREE.Vector3(pos.getX(i+1), pos.getY(i+1), pos.getZ(i+1));
+    const c = new THREE.Vector3(pos.getX(i+2), pos.getY(i+2), pos.getZ(i+2));
+    faces.push(new THREE.Vector3().addVectors(a, b).add(c).divideScalar(3).normalize().multiplyScalar(r));
+  }
+  return faces;
+}
+
+// Init home page, first virus auto-loads when you navigate
+document.addEventListener('DOMContentLoaded', () => {
+  // no 3d on home
+});
+</script>
+</body>
+</html>
